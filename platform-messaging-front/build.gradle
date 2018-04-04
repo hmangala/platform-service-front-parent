@@ -1,0 +1,44 @@
+/**
+ * Copyright (C) Davinta Technologies 2017. All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of Davinta Technologies. You shall not disclose such Confidential Information
+ * and shall use it only in accordance with the terms and conditions
+ * entered into with Davinta Technologies.
+ */
+
+buildscript {
+	repositories {
+		mavenLocal()
+		maven { url "$repositoryUrl" }
+	}
+
+	dependencies {
+		classpath 'com.davinta.gradle:aeus-build-conventions:1.+'
+	}
+}
+
+group = 'com.platform.messaging'
+description = 'REGULUS MESSAGING CUSTOMER'
+
+/** SET PROJECT VERSION FROM ROOT PROJECT */
+def projectProperties = new Properties()
+file("../gradle.properties").withInputStream { projectProperties.load(it) }
+version = projectProperties.getProperty("version")
+
+apply plugin: 'com.davinta.convention.root'
+apply plugin: 'com.davinta.convention.spring-module'
+apply plugin: "io.spring.dependency-management"
+
+dependencyManagement {
+	imports {
+		mavenBom "com.platform.tools:aeus-build-dependencies:1.0"
+	}
+}
+
+dependencies {
+	compile 'com.platform.messaging:platform-messaging-base:1.4.0.BUILD-SNAPSHOT'
+	compile ("com.platform.util:platform-util-kafka:1.2.0.BUILD-SNAPSHOT") { changing = true}
+	compile 'org.hibernate:hibernate-validator:5.2.4.Final'
+	testCompile 'junit:junit'
+}
